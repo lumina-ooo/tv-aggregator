@@ -167,7 +167,7 @@ fun ContentDetailScreen(
                                         color = MaterialTheme.colorScheme.secondaryContainer
                                     ) {
                                         Text(
-                                            text = genre,
+                                            text = com.lumina.tvaggregator.data.model.GenreMapping.translate(genre),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)

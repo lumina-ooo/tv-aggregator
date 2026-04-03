@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.lumina.tvaggregator.data.api.JustWatchRepository
 import com.lumina.tvaggregator.data.model.Content
+import com.lumina.tvaggregator.data.model.GenreMapping
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,7 +60,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
         content.forEach { item ->
             item.genres.forEach { genre ->
-                contentByGenreMap.getOrPut(genre) { mutableListOf() }.add(item)
+                // Translate genre shortName to French label
+                val translatedGenre = GenreMapping.translate(genre)
+                contentByGenreMap.getOrPut(translatedGenre) { mutableListOf() }.add(item)
             }
         }
 

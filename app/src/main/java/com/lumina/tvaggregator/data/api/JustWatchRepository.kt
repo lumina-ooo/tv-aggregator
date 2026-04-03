@@ -57,7 +57,7 @@ class JustWatchRepository {
                 operationName = "GetPopularTitles",
                 query = JustWatchQueries.POPULAR_TITLES,
                 variables = mapOf(
-                    "first" to 40,
+                    "first" to 60,
                     "popularTitlesFilter" to emptyMap<String, Any>(),
                     "language" to "fr",
                     "country" to "BE",
@@ -68,7 +68,7 @@ class JustWatchRepository {
                 )
             )
 
-            executeQuery(request)
+            executeQuery(request, filterFreeOnly = true)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -97,7 +97,7 @@ class JustWatchRepository {
         }
     }
 
-    private suspend fun executeQuery(request: GraphQLRequest): Result<List<Content>> {
+    private suspend fun executeQuery(request: GraphQLRequest, filterFreeOnly: Boolean = false): Result<List<Content>> {
         val response = api.query(request)
 
         if (!response.isSuccessful) {
@@ -109,9 +109,14 @@ class JustWatchRepository {
             return Result.failure(Exception("GraphQL: ${body.errors.first().message}"))
         }
 
-        val content = body?.data?.popularTitles?.edges?.mapNotNull { edge ->
+        var content = body?.data?.popularTitles?.edges?.mapNotNull { edge ->
             edge?.node?.let { mapTitleNodeToContent(it) }
         } ?: emptyList()
+
+        // Filter to only show content with at least one free offer
+        if (filterFreeOnly) {
+            content = content.filter { c -> c.offers.any { it.isFree() } }
+        }
 
         return Result.success(content)
     }
@@ -130,12 +135,17 @@ class JustWatchRepository {
                 monetizationType = offerData.monetizationType,
                 presentationType = offerData.presentationType,
                 webUrl = offerData.standardWebUrl,
-                iconUrl = packageData.icon
+                iconUrl = if (packageData.icon != null) "https://images.justwatch.com${packageData.icon}" else null
             )
         } ?: emptyList()
 
         val genres = contentData.genres?.mapNotNull { it.shortName } ?: emptyList()
         val imdbScore = contentData.scoring?.imdbScore
+
+        // Build full poster URL
+        val posterUrl = if (contentData.posterUrl != null) {
+            "https://images.justwatch.com${contentData.posterUrl}"
+        } else null
 
         return Content(
             id = node.id ?: "",
@@ -143,7 +153,7 @@ class JustWatchRepository {
             title = title,
             originalReleaseYear = contentData.originalReleaseYear,
             description = contentData.shortDescription,
-            posterUrl = contentData.posterUrl,
+            posterUrl = posterUrl,
             genres = genres,
             imdbScore = imdbScore,
             offers = offers,

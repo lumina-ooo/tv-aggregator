@@ -13,9 +13,8 @@ data class Content(
     val fullPath: String?
 ) {
     fun getPosterImageUrl(): String? {
-        return posterUrl?.let { poster ->
-            "https://images.justwatch.com/poster/$objectId/s332/$poster"
-        }
+        // posterUrl already contains full URL from repository (prefixed with https://images.justwatch.com)
+        return posterUrl
     }
 
     fun getGenresText(): String {
