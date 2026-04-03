@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   test:
     name: Run Tests
@@ -124,21 +127,20 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build release APK
-      run: ./gradlew assembleRelease
+    - name: Build debug APK
+      run: ./gradlew assembleDebug
 
     - name: Get tag name
       id: get_tag
       run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create Release and Upload APK
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.get_tag.outputs.TAG_NAME }}
-        release_name: Agrégateur TV ${{ steps.get_tag.outputs.TAG_NAME }}
+        name: Agrégateur TV ${{ steps.get_tag.outputs.TAG_NAME }}
         body: |
           ## Agrégateur TV - Plateformes de streaming francophones
 
@@ -162,13 +164,5 @@ jobs:
           - Molotov (France)
         draft: false
         prerelease: false
-
-    - name: Upload Release APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/release/app-release.apk
-        asset_name: tv-aggregator-${{ steps.get_tag.outputs.TAG_NAME }}.apk
-        asset_content_type: application/vnd.android.package-archive
+        files: |
+          app/build/outputs/apk/debug/app-debug.apk

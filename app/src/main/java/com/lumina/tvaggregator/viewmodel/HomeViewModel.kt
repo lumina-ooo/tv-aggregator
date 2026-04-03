@@ -3,29 +3,27 @@ package com.lumina.tvaggregator.viewmodel
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.lumina.tvaggregator.data.PlatformCategory
-import com.lumina.tvaggregator.data.PlatformRepository
-import com.lumina.tvaggregator.data.SearchFilter
-import com.lumina.tvaggregator.data.StreamingPlatform
+import com.lumina.tvaggregator.data.api.JustWatchRepository
+import com.lumina.tvaggregator.data.model.Content
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+
+data class ContentByGenre(
+    val genre: String,
+    val content: List<Content>
+)
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = PlatformRepository(application.applicationContext)
+    private val justWatchRepository = JustWatchRepository.getInstance()
 
-    private val _searchFilter = MutableStateFlow(SearchFilter())
-    val searchFilter: StateFlow<SearchFilter> = _searchFilter.asStateFlow()
-
-    private val _filteredPlatforms = MutableStateFlow<List<StreamingPlatform>>(emptyList())
-    val filteredPlatforms: StateFlow<List<StreamingPlatform>> = _filteredPlatforms.asStateFlow()
+    private val _contentByGenre = MutableStateFlow<List<ContentByGenre>>(emptyList())
+    val contentByGenre: StateFlow<List<ContentByGenre>> = _contentByGenre.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -34,88 +32,68 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     init {
-        // Combine repository platforms with search filter to produce filtered results
-        viewModelScope.launch {
-            combine(
-                repository.platforms,
-                _searchFilter
-            ) { platforms, filter ->
-                repository.searchPlatforms(filter)
-            }.collect { filteredList ->
-                _filteredPlatforms.value = filteredList
-            }
-        }
+        loadPopularContent()
     }
 
-    fun updateSearchQuery(query: String) {
-        _searchFilter.value = _searchFilter.value.copy(query = query)
-    }
-
-    fun updateCategoryFilter(category: PlatformCategory?) {
-        _searchFilter.value = _searchFilter.value.copy(category = category)
-    }
-
-    fun updateInstalledFilter(installedOnly: Boolean) {
-        _searchFilter.value = _searchFilter.value.copy(installedOnly = installedOnly)
-    }
-
-    fun clearFilters() {
-        _searchFilter.value = SearchFilter()
-    }
-
-    fun refreshPlatforms() {
+    private fun loadPopularContent() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                repository.refreshInstallationStatus()
+                val result = justWatchRepository.getPopularTitles()
+                if (result.isSuccess) {
+                    val content = result.getOrNull() ?: emptyList()
+                    organizeContentByGenre(content)
+                } else {
+                    _errorMessage.value = "Erreur lors du chargement du contenu: ${result.exceptionOrNull()?.message}"
+                }
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors de la mise à jour: ${e.message}"
+                _errorMessage.value = "Erreur lors du chargement du contenu: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    fun openPlatform(platform: StreamingPlatform, context: Context) {
-        viewModelScope.launch {
-            try {
-                if (platform.isInstalled) {
-                    // Try to launch the app directly
-                    val launchIntent = context.packageManager.getLaunchIntentForPackage(platform.packageName)
-                    if (launchIntent != null) {
-                        context.startActivity(launchIntent)
-                    } else {
-                        // Fallback to Play Store if app is installed but can't be launched
-                        openInPlayStore(platform.packageName, context)
-                    }
-                } else {
-                    // Open in Play Store for installation
-                    openInPlayStore(platform.packageName, context)
-                }
-            } catch (e: Exception) {
-                _errorMessage.value = "Impossible d'ouvrir ${platform.name}: ${e.message}"
+    private fun organizeContentByGenre(content: List<Content>) {
+        val contentByGenreMap = mutableMapOf<String, MutableList<Content>>()
+
+        content.forEach { item ->
+            item.genres.forEach { genre ->
+                contentByGenreMap.getOrPut(genre) { mutableListOf() }.add(item)
             }
         }
+
+        // Sort genres by content count and take top genres
+        val sortedGenres = contentByGenreMap.entries
+            .sortedByDescending { it.value.size }
+            .take(8) // Limit to 8 genres for better UI
+            .map { (genre, contentList) ->
+                ContentByGenre(
+                    genre = genre,
+                    content = contentList.sortedByDescending { it.imdbScore ?: 0.0 }.take(20)
+                )
+            }
+
+        _contentByGenre.value = sortedGenres
     }
 
-    private fun openInPlayStore(packageName: String, context: Context) {
-        try {
-            // Try to open in Play Store app
-            val playStoreIntent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("market://details?id=$packageName")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(playStoreIntent)
-        } catch (e: Exception) {
+    fun refreshContent() {
+        loadPopularContent()
+    }
+
+    fun openContent(content: Content, context: Context) {
+        viewModelScope.launch {
             try {
-                // Fallback to web browser
-                val webIntent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val freeOffer = content.getFreeOffers().firstOrNull()
+                if (freeOffer?.webUrl != null) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(freeOffer.webUrl))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                } else {
+                    _errorMessage.value = "Aucun lien disponible pour ${content.title}"
                 }
-                context.startActivity(webIntent)
-            } catch (webException: Exception) {
-                _errorMessage.value = "Impossible d'ouvrir le Play Store"
+            } catch (e: Exception) {
+                _errorMessage.value = "Impossible d'ouvrir ${content.title}: ${e.message}"
             }
         }
     }
@@ -124,15 +102,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _errorMessage.value = null
     }
 
-    fun getPlatformsByCategory(): Map<PlatformCategory, List<StreamingPlatform>> {
-        return _filteredPlatforms.value.groupBy { it.category }
+    fun getAllContent(): List<Content> {
+        return _contentByGenre.value.flatMap { it.content }.distinctBy { it.id }
     }
 
-    fun getInstalledPlatforms(): List<StreamingPlatform> {
-        return _filteredPlatforms.value.filter { it.isInstalled }
-    }
-
-    fun getUninstalledPlatforms(): List<StreamingPlatform> {
-        return _filteredPlatforms.value.filter { !it.isInstalled }
+    fun getContentByGenre(genre: String): List<Content> {
+        return _contentByGenre.value.find { it.genre == genre }?.content ?: emptyList()
     }
 }
