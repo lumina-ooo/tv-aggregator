@@ -1,5 +1,6 @@
 package com.lumina.tvaggregator.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -201,7 +202,7 @@ private fun PlatformSelectionCard(
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier.height(120.dp)
+        modifier = modifier.height(120.dp).then(Modifier.clickable { onClick() })
     ) {
         Row(
             modifier = Modifier
@@ -273,6 +274,7 @@ private fun PlatformContentCard(
         modifier = modifier
             .width(200.dp)
             .height(320.dp)
+            .then(Modifier.clickable { onClick() })
     ) {
         Column(
             modifier = Modifier.fillMaxSize()

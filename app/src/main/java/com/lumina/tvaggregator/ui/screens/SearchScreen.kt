@@ -1,5 +1,6 @@
 package com.lumina.tvaggregator.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -189,6 +190,7 @@ private fun SearchResultCard(
         modifier = modifier
             .fillMaxWidth()
             .height(320.dp)
+            .then(Modifier.clickable { onClick() })
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
