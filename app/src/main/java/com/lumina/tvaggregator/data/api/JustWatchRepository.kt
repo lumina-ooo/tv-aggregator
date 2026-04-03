@@ -131,7 +131,7 @@ class JustWatchRepository {
         val title = contentData.title ?: return null
 
         val offers = node.offers?.mapNotNull { offerData ->
-            val packageData = offerData.package
+            val packageData = offerData.packageInfo
             Offer.fromApiData(
                 platformName = packageData?.clearName ?: packageData?.shortName ?: "Unknown",
                 packageName = packageData?.technicalName,

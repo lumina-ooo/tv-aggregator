@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         // Refresh platform installation status when app resumes
-        homeViewModel.refreshPlatforms()
+        homeViewModel.refreshContent()
     }
 }
 

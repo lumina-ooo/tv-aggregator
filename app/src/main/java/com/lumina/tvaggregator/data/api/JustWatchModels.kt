@@ -103,7 +103,8 @@ data class OfferData(
     val presentationType: String?,
     @SerializedName("standardWebURL")
     val standardWebUrl: String?,
-    val package: PackageData?
+    @SerializedName("package")
+    val packageInfo: PackageData?
 )
 
 data class PackageData(
