@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colors -->
+    <color name="tv_primary">#1976D2</color>
+    <color name="tv_primary_variant">#1565C0</color>
+    <color name="tv_on_primary">#FFFFFF</color>
+
+    <!-- Secondary colors -->
+    <color name="tv_secondary">#03DAC6</color>
+    <color name="tv_secondary_variant">#018786</color>
+    <color name="tv_on_secondary">#000000</color>
+
+    <!-- Background colors -->
+    <color name="tv_background">#121212</color>
+    <color name="tv_on_background">#FFFFFF</color>
+
+    <!-- Surface colors -->
+    <color name="tv_surface">#1E1E1E</color>
+    <color name="tv_on_surface">#FFFFFF</color>
+
+    <!-- Error colors -->
+    <color name="tv_error">#CF6679</color>
+    <color name="tv_on_error">#000000</color>
+
+    <!-- Focus and selection colors -->
+    <color name="tv_focus">#2196F3</color>
+    <color name="tv_focus_no_dimming">#4CAF50</color>
+
+    <!-- Platform category colors -->
+    <color name="category_national">#FF5722</color>
+    <color name="category_regional">#9C27B0</color>
+    <color name="category_cultural">#607D8B</color>
+    <color name="category_international">#FF9800</color>
+    <color name="category_live">#F44336</color>
+
+    <!-- Status colors -->
+    <color name="status_installed">#4CAF50</color>
+    <color name="status_not_installed">#FFC107</color>
+
+    <!-- Traditional Android colors for compatibility -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

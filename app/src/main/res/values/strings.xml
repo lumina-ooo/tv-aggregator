@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Agrégateur TV</string>
+    <string name="app_description">Plateformes de streaming gratuites francophones</string>
+
+    <!-- Home screen -->
+    <string name="home_title">Agrégateur TV</string>
+    <string name="home_subtitle">Plateformes de streaming gratuites francophones</string>
+    <string name="search_hint">Rechercher une plateforme…</string>
+    <string name="filter_category">Catégorie</string>
+    <string name="filter_all_categories">Toutes</string>
+    <string name="filter_installed">Installées</string>
+    <string name="no_platforms_found">Aucune plateforme trouvée</string>
+
+    <!-- Platform categories -->
+    <string name="category_national_tv">TV Nationale</string>
+    <string name="category_regional_tv">TV Régionale</string>
+    <string name="category_cultural">Culturel</string>
+    <string name="category_international">International</string>
+    <string name="category_live_tv">TV en Direct</string>
+
+    <!-- Platform statuses -->
+    <string name="status_installed">Installé</string>
+    <string name="status_not_installed">Non installé</string>
+    <string name="action_open">Ouvrir</string>
+    <string name="action_install">Installer</string>
+
+    <!-- Platform names and descriptions -->
+    <string name="platform_tf1plus">TF1+</string>
+    <string name="platform_tf1plus_desc">La plateforme gratuite de TF1 avec replays et programmes exclusifs</string>
+
+    <string name="platform_rtltviplus">RTL TVI+</string>
+    <string name="platform_rtltviplus_desc">RTL TVI en direct et en replay</string>
+
+    <string name="platform_auvio">Auvio</string>
+    <string name="platform_auvio_desc">La plateforme numérique de la RTBF</string>
+
+    <string name="platform_francetv">France.tv</string>
+    <string name="platform_francetv_desc">Tous les programmes de France Télévisions en replay</string>
+
+    <string name="platform_m6plus">M6+</string>
+    <string name="platform_m6plus_desc">Les programmes du Groupe M6 en replay et en direct</string>
+
+    <string name="platform_arte">ARTE</string>
+    <string name="platform_arte_desc">Documentaires, films, séries et concerts</string>
+
+    <string name="platform_plutotv">Pluto TV</string>
+    <string name="platform_plutotv_desc">TV gratuite avec plus de 100 chaînes</string>
+
+    <string name="platform_rakutentv">Rakuten TV</string>
+    <string name="platform_rakutentv_desc">Films et séries gratuits avec publicité</string>
+
+    <string name="platform_molotov">Molotov</string>
+    <string name="platform_molotov_desc">Télévision française en direct et en replay</string>
+
+    <!-- Countries -->
+    <string name="country_france">France</string>
+    <string name="country_belgium">Belgique</string>
+    <string name="country_franco_german">Franco-Allemande</string>
+    <string name="country_international">International</string>
+
+    <!-- Error messages -->
+    <string name="error_platform_launch">Impossible d\'ouvrir %1$s</string>
+    <string name="error_play_store">Impossible d\'ouvrir le Play Store</string>
+    <string name="error_network">Erreur de connexion réseau</string>
+    <string name="error_refresh">Erreur lors de la mise à jour</string>
+
+    <!-- Actions -->
+    <string name="action_refresh">Actualiser</string>
+    <string name="action_clear_filters">Effacer les filtres</string>
+    <string name="action_search">Rechercher</string>
+
+    <!-- Content descriptions for accessibility -->
+    <string name="cd_platform_logo">Logo de %1$s</string>
+    <string name="cd_search_icon">Icône de recherche</string>
+    <string name="cd_filter_icon">Icône de filtre</string>
+    <string name="cd_installed_indicator">Indicateur d\'installation</string>
+    <string name="cd_open_indicator">Indicateur d\'ouverture</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_search">Recherche</string>
+    <string name="nav_settings">Paramètres</string>
+</resources>

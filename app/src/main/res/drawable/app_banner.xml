@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+
+    <!-- Background -->
+    <path
+        android:pathData="M0,0L320,0L320,180L0,180Z"
+        android:fillColor="@color/tv_primary" />
+
+    <!-- TV Icon -->
+    <path
+        android:pathData="M80,60L240,60A8,8 0,0 1,248 68L248,132A8,8 0,0 1,240 140L80,140A8,8 0,0 1,72 132L72,68A8,8 0,0 1,80 60Z"
+        android:fillColor="@color/white"
+        android:strokeWidth="2"
+        android:strokeColor="@color/tv_on_primary" />
+
+    <!-- Screen -->
+    <path
+        android:pathData="M85,70L235,70L235,125L85,125Z"
+        android:fillColor="@color/tv_background" />
+
+    <!-- Text -->
+    <path
+        android:pathData="M100,155L220,155"
+        android:strokeWidth="4"
+        android:strokeColor="@color/white"
+        android:strokeLineCap="round" />
+
+</vector>
