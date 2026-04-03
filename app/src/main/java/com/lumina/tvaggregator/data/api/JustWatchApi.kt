@@ -9,13 +9,7 @@ interface JustWatchApi {
 
     @Headers("Content-Type: application/json")
     @POST("graphql")
-    suspend fun searchTitles(
-        @Body request: GraphQLRequest<SearchTitlesVariables>
-    ): Response<GraphQLResponse<SearchTitlesResponse>>
-
-    @Headers("Content-Type: application/json")
-    @POST("graphql")
-    suspend fun getPopularTitles(
-        @Body request: GraphQLRequest<PopularTitlesVariables>
-    ): Response<GraphQLResponse<PopularTitlesResponse>>
+    suspend fun query(
+        @Body request: GraphQLRequest
+    ): Response<GraphQLResponse>
 }

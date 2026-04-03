@@ -2,78 +2,39 @@ package com.lumina.tvaggregator.data.api
 
 import com.google.gson.annotations.SerializedName
 
-// GraphQL Request models
-data class GraphQLRequest<T>(
+// Generic GraphQL request - both search and popular use the same structure
+data class GraphQLRequest(
+    val operationName: String,
     val query: String,
-    val variables: T
-)
-
-// Search request models
-data class SearchTitlesInput(
-    val searchQuery: String,
-    val country: String,
-    val language: String,
-    val count: Int,
-    val monetizationTypes: List<String>
-)
-
-data class SearchTitlesVariables(
-    val searchTitlesInput: SearchTitlesInput
-)
-
-// Popular titles request models
-data class PopularTitlesInput(
-    val country: String,
-    val language: String,
-    val count: Int,
-    val monetizationTypes: List<String>
-)
-
-data class PopularTitlesVariables(
-    val popularTitlesInput: PopularTitlesInput
+    val variables: Map<String, Any?>
 )
 
 // Response models
-data class GraphQLResponse<T>(
-    val data: T?,
+data class GraphQLResponse(
+    val data: ResponseData?,
     val errors: List<GraphQLError>?
 )
 
 data class GraphQLError(
-    val message: String,
-    val locations: List<ErrorLocation>?
+    val message: String
 )
 
-data class ErrorLocation(
-    val line: Int,
-    val column: Int
+data class ResponseData(
+    val popularTitles: TitleConnection?
 )
 
-// Search response models
-data class SearchTitlesResponse(
-    val searchTitles: SearchTitlesConnection
-)
-
-data class PopularTitlesResponse(
-    val popularTitles: PopularTitlesConnection
-)
-
-data class SearchTitlesConnection(
-    val edges: List<TitleEdge>
-)
-
-data class PopularTitlesConnection(
-    val edges: List<TitleEdge>
+data class TitleConnection(
+    val edges: List<TitleEdge>?
 )
 
 data class TitleEdge(
-    val node: TitleNode
+    val node: TitleNode?
 )
 
 data class TitleNode(
-    val id: String,
-    val objectId: Int,
-    val objectType: String,
+    val id: String?,
+    val objectId: Int?,
+    val objectType: String?,
     val content: ContentData?,
     val offers: List<OfferData>?
 )
@@ -85,17 +46,17 @@ data class ContentData(
     val fullPath: String?,
     val posterUrl: String?,
     val genres: List<GenreData>?,
-    val scoring: List<ScoringData>?
+    val scoring: ScoringData?
 )
 
 data class GenreData(
-    val shortName: String?,
-    val translation: String?
+    val shortName: String?
 )
 
 data class ScoringData(
-    val providerType: String?,
-    val value: Double?
+    val imdbScore: Double?,
+    val tmdbScore: Double?,
+    val jwRating: Double?
 )
 
 data class OfferData(
@@ -115,87 +76,112 @@ data class PackageData(
     val technicalName: String?
 )
 
-// Query constants
+// Real JustWatch GraphQL queries (verified against live API)
 object JustWatchQueries {
+
+    // Both search and popular use the same "popularTitles" endpoint.
+    // Search adds a searchQuery to the TitleFilter.
     const val SEARCH_TITLES = """
-        query SearchTitles(${'$'}searchTitlesInput: SearchTitlesInput!) {
-          searchTitles(input: ${'$'}searchTitlesInput) {
-            edges {
-              node {
-                id
-                objectId
-                objectType
-                content(country: "BE", language: "fr") {
-                  title
-                  originalReleaseYear
-                  shortDescription
-                  fullPath
-                  posterUrl
-                  genres {
-                    shortName
-                    translation
-                  }
-                  scoring {
-                    providerType
-                    value
-                  }
-                }
-                offers(country: "BE", platform: "ANDROID_TV") {
-                  monetizationType
-                  presentationType
-                  standardWebURL
-                  package {
-                    packageId
-                    clearName
-                    shortName
-                    icon
-                    technicalName
-                  }
-                }
-              }
-            }
+query GetSearchTitles(
+  ${'$'}searchTitlesFilter: TitleFilter!,
+  ${'$'}country: Country!,
+  ${'$'}language: Language!,
+  ${'$'}first: Int!,
+  ${'$'}formatPoster: ImageFormat,
+  ${'$'}formatOfferIcon: ImageFormat,
+  ${'$'}profile: PosterProfile,
+  ${'$'}filter: OfferFilter!,
+  ${'$'}offset: Int = 0
+) {
+  popularTitles(
+    country: ${'$'}country
+    filter: ${'$'}searchTitlesFilter
+    first: ${'$'}first
+    sortBy: POPULAR
+    sortRandomSeed: 0
+    offset: ${'$'}offset
+  ) {
+    edges {
+      node {
+        id
+        objectId
+        objectType
+        content(country: ${'$'}country, language: ${'$'}language) {
+          title
+          originalReleaseYear
+          shortDescription
+          fullPath
+          posterUrl(profile: ${'$'}profile, format: ${'$'}formatPoster)
+          genres { shortName }
+          scoring { imdbScore tmdbScore jwRating }
+        }
+        offers(country: ${'$'}country, platform: WEB, filter: ${'$'}filter) {
+          monetizationType
+          presentationType
+          standardWebURL
+          package {
+            packageId
+            clearName
+            shortName
+            technicalName
+            icon(profile: S100, format: ${'$'}formatOfferIcon)
           }
         }
-    """
+      }
+    }
+  }
+}
+"""
 
     const val POPULAR_TITLES = """
-        query PopularTitles(${'$'}popularTitlesInput: PopularTitlesInput!) {
-          popularTitles(input: ${'$'}popularTitlesInput) {
-            edges {
-              node {
-                id
-                objectId
-                objectType
-                content(country: "BE", language: "fr") {
-                  title
-                  originalReleaseYear
-                  shortDescription
-                  fullPath
-                  posterUrl
-                  genres {
-                    shortName
-                    translation
-                  }
-                  scoring {
-                    providerType
-                    value
-                  }
-                }
-                offers(country: "BE", platform: "ANDROID_TV") {
-                  monetizationType
-                  presentationType
-                  standardWebURL
-                  package {
-                    packageId
-                    clearName
-                    shortName
-                    icon
-                    technicalName
-                  }
-                }
-              }
-            }
+query GetPopularTitles(
+  ${'$'}popularTitlesFilter: TitleFilter,
+  ${'$'}country: Country!,
+  ${'$'}language: Language!,
+  ${'$'}first: Int! = 40,
+  ${'$'}formatPoster: ImageFormat,
+  ${'$'}formatOfferIcon: ImageFormat,
+  ${'$'}profile: PosterProfile,
+  ${'$'}filter: OfferFilter!,
+  ${'$'}offset: Int = 0
+) {
+  popularTitles(
+    country: ${'$'}country
+    filter: ${'$'}popularTitlesFilter
+    first: ${'$'}first
+    sortBy: POPULAR
+    sortRandomSeed: 0
+    offset: ${'$'}offset
+  ) {
+    edges {
+      node {
+        id
+        objectId
+        objectType
+        content(country: ${'$'}country, language: ${'$'}language) {
+          title
+          originalReleaseYear
+          shortDescription
+          fullPath
+          posterUrl(profile: ${'$'}profile, format: ${'$'}formatPoster)
+          genres { shortName }
+          scoring { imdbScore tmdbScore jwRating }
+        }
+        offers(country: ${'$'}country, platform: WEB, filter: ${'$'}filter) {
+          monetizationType
+          presentationType
+          standardWebURL
+          package {
+            packageId
+            clearName
+            shortName
+            technicalName
+            icon(profile: S100, format: ${'$'}formatOfferIcon)
           }
         }
-    """
+      }
+    }
+  }
+}
+"""
 }
