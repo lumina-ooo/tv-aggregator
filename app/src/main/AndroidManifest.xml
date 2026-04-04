@@ -27,7 +27,9 @@
         <package android:name="fr.tf1.mytf1" />
         <package android:name="tv.arte.plus7" />
         <package android:name="com.amazon.avod.thirdpartyclient" />
+        <package android:name="com.amazon.amazonvideo.livingroom" />
         <package android:name="com.netflix.mediaclient" />
+        <package android:name="com.netflix.ninja" />
         <package android:name="com.google.android.videos" />
         <package android:name="com.disney.disneyplus" />
         <package android:name="com.hbo.hbonow" />

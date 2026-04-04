@@ -156,28 +156,29 @@ fun TVAggregatorNavigation(
                     onOfferClick = { offer ->
                         if (offer.webUrl != null) {
                             val uri = android.net.Uri.parse(offer.webUrl)
-                            // Map technicalName to Android package
-                            val appPackage = when (offer.packageName) {
-                                "rtbf" -> "be.rtbf.auvio"
-                                "rtlplay" -> "com.tapptic.rtl.tvi"
-                                "tf1" -> "fr.tf1.mytf1"
-                                "arte" -> "tv.arte.plus7"
-                                "amazonprimevideo", "amazon" -> "com.amazon.avod.thirdpartyclient"
-                                "amazonfrancetv", "amazontfoumax" -> "com.amazon.avod.thirdpartyclient"
-                                "netflix" -> "com.netflix.mediaclient"
-                                "play" -> "com.google.android.videos"
-                                "disneyplus" -> "com.disney.disneyplus"
-                                "max" -> "com.hbo.hbonow"
-                                "itunes" -> "com.apple.atve.androidtv.appletv"
-                                "wuaki" -> "tv.wuaki.apptv"
-                                "crunchyroll" -> "com.crunchyroll.crunchyroid"
-                                "molotovtv" -> "tv.molotov.app"
-                                "sixplay" -> "fr.m6.m6replay"
-                                "plutotv" -> "tv.pluto.android"
-                                else -> null
+                            // Map technicalName to Android packages (TV variant first, then mobile)
+                            val appPackages: List<String> = when (offer.packageName) {
+                                "rtbf" -> listOf("be.rtbf.auvio")
+                                "rtlplay" -> listOf("com.tapptic.rtl.tvi")
+                                "tf1" -> listOf("fr.tf1.mytf1")
+                                "arte" -> listOf("tv.arte.plus7")
+                                "amazonprimevideo", "amazon" -> listOf("com.amazon.amazonvideo.livingroom", "com.amazon.avod.thirdpartyclient")
+                                "amazonfrancetv", "amazontfoumax" -> listOf("com.amazon.amazonvideo.livingroom", "com.amazon.avod.thirdpartyclient")
+                                "netflix" -> listOf("com.netflix.ninja", "com.netflix.mediaclient")
+                                "play" -> listOf("com.google.android.videos")
+                                "disneyplus" -> listOf("com.disney.disneyplus")
+                                "max" -> listOf("com.hbo.hbonow")
+                                "itunes" -> listOf("com.apple.atve.androidtv.appletv")
+                                "wuaki" -> listOf("tv.wuaki.apptv")
+                                "crunchyroll" -> listOf("com.crunchyroll.crunchyroid")
+                                "molotovtv" -> listOf("tv.molotov.app")
+                                "sixplay" -> listOf("fr.m6.m6replay")
+                                "plutotv" -> listOf("tv.pluto.android")
+                                else -> emptyList()
                             }
                             var opened = false
-                            if (appPackage != null) {
+                            for (appPackage in appPackages) {
+                                if (opened) break
                                 // Strategy 1: deep link INTO app (only if app handles this URL)
                                 try {
                                     val deepIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
