@@ -156,7 +156,7 @@ fun TVAggregatorNavigation(
                     onOfferClick = { offer ->
                         if (offer.webUrl != null) {
                             val uri = android.net.Uri.parse(offer.webUrl)
-                            // Map technicalName to Android package for native app launch
+                            // Map technicalName to Android package
                             val appPackage = when (offer.packageName) {
                                 "rtbf" -> "be.rtbf.auvio"
                                 "rtlplay" -> "be.rtl.rtlplay"
@@ -177,17 +177,27 @@ fun TVAggregatorNavigation(
                                 else -> null
                             }
                             var opened = false
-                            // Try opening deep link in native app
                             if (appPackage != null) {
+                                // Strategy 1: deep link with package constraint
                                 try {
-                                    val appIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
-                                    appIntent.setPackage(appPackage)
-                                    appIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    context.startActivity(appIntent)
+                                    val deepIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                                    deepIntent.setPackage(appPackage)
+                                    deepIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(deepIntent)
                                     opened = true
-                                } catch (_: Exception) {}
+                                } catch (_: Exception) {
+                                    // Strategy 2: just launch the app (home screen)
+                                    try {
+                                        val launchIntent = context.packageManager.getLaunchIntentForPackage(appPackage)
+                                        if (launchIntent != null) {
+                                            launchIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            context.startActivity(launchIntent)
+                                            opened = true
+                                        }
+                                    } catch (_: Exception) {}
+                                }
                             }
-                            // Fallback: open URL (system may still resolve to app)
+                            // Strategy 3: open URL in browser
                             if (!opened) {
                                 try {
                                     val webIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
