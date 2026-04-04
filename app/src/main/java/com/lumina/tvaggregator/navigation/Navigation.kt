@@ -334,10 +334,6 @@ private fun TVNavigationSidebar(
                 },
                 colors = NavigationRailItemDefaults.colors(
                     selectedIconColor = if (isKids) kidsColor else MaterialTheme.colorScheme.primary,
-                    selectedIndicatorColor = if (isKids)
-                        kidsColor.copy(alpha = 0.2f)
-                    else
-                        MaterialTheme.colorScheme.primaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 modifier = Modifier.padding(vertical = 4.dp)
