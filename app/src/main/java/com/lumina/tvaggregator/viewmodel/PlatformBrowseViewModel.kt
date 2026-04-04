@@ -110,7 +110,7 @@ class PlatformBrowseViewModel(application: Application) : AndroidViewModel(appli
                 description = "RTL Belgique — Séries, divertissement et replay",
                 shortName = "rtl",
                 country = "BE",
-                packageName = "be.rtl.rtlplay"
+                packageName = "com.tapptic.rtl.tvi"
             ),
             SupportedPlatform(
                 id = "tf1",

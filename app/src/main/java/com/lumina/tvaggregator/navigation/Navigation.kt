@@ -159,7 +159,7 @@ fun TVAggregatorNavigation(
                             // Map technicalName to Android package
                             val appPackage = when (offer.packageName) {
                                 "rtbf" -> "be.rtbf.auvio"
-                                "rtlplay" -> "be.rtl.rtlplay"
+                                "rtlplay" -> "com.tapptic.rtl.tvi"
                                 "tf1" -> "fr.tf1.mytf1"
                                 "arte" -> "tv.arte.plus7"
                                 "amazonprimevideo", "amazon" -> "com.amazon.avod.thirdpartyclient"

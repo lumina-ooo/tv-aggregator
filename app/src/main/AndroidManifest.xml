@@ -23,7 +23,7 @@
     <!-- Declare packages we want to query/launch (required Android 11+) -->
     <queries>
         <package android:name="be.rtbf.auvio" />
-        <package android:name="be.rtl.rtlplay" />
+        <package android:name="com.tapptic.rtl.tvi" />
         <package android:name="fr.tf1.mytf1" />
         <package android:name="tv.arte.plus7" />
         <package android:name="com.amazon.avod.thirdpartyclient" />

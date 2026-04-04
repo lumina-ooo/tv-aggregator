@@ -26,7 +26,7 @@ class PlatformRepository(private val context: Context) {
             id = "rtltviplus",
             name = "RTL Play",
             description = "RTL TVI en direct et en replay",
-            packageName = "be.rtl.rtlplay",
+            packageName = "com.tapptic.rtl.tvi",
             logoResourceId = R.drawable.logo_rtltviplus,
             category = PlatformCategory.REGIONAL_TV,
             country = "Belgique"
