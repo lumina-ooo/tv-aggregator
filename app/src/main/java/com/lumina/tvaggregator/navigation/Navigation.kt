@@ -155,12 +155,46 @@ fun TVAggregatorNavigation(
                     },
                     onOfferClick = { offer ->
                         if (offer.webUrl != null) {
-                            val intent = android.content.Intent(
-                                android.content.Intent.ACTION_VIEW,
-                                android.net.Uri.parse(offer.webUrl)
-                            )
-                            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                            try { context.startActivity(intent) } catch (_: Exception) {}
+                            val uri = android.net.Uri.parse(offer.webUrl)
+                            // Map technicalName to Android package for native app launch
+                            val appPackage = when (offer.packageName) {
+                                "rtbf" -> "be.rtbf.auvio"
+                                "rtlplay" -> "be.rtl.rtlplay"
+                                "tf1" -> "fr.tf1.mytf1"
+                                "arte" -> "tv.arte.plus7"
+                                "amazonprimevideo", "amazon" -> "com.amazon.avod.thirdpartyclient"
+                                "amazonfrancetv", "amazontfoumax" -> "com.amazon.avod.thirdpartyclient"
+                                "netflix" -> "com.netflix.mediaclient"
+                                "play" -> "com.google.android.videos"
+                                "disneyplus" -> "com.disney.disneyplus"
+                                "max" -> "com.hbo.hbonow"
+                                "itunes" -> "com.apple.atve.androidtv.appletv"
+                                "wuaki" -> "tv.wuaki.apptv"
+                                "crunchyroll" -> "com.crunchyroll.crunchyroid"
+                                "molotovtv" -> "tv.molotov.app"
+                                "sixplay" -> "fr.m6.m6replay"
+                                "plutotv" -> "tv.pluto.android"
+                                else -> null
+                            }
+                            var opened = false
+                            // Try opening deep link in native app
+                            if (appPackage != null) {
+                                try {
+                                    val appIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                                    appIntent.setPackage(appPackage)
+                                    appIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(appIntent)
+                                    opened = true
+                                } catch (_: Exception) {}
+                            }
+                            // Fallback: open URL (system may still resolve to app)
+                            if (!opened) {
+                                try {
+                                    val webIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                                    webIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(webIntent)
+                                } catch (_: Exception) {}
+                            }
                         }
                     }
                 )
