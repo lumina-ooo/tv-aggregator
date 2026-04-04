@@ -30,45 +30,87 @@ class JustWatchRepository {
 
     suspend fun searchTitles(query: String): Result<List<Content>> = withContext(Dispatchers.IO) {
         try {
-            val request = GraphQLRequest(
-                operationName = "GetSearchTitles",
-                query = JustWatchQueries.SEARCH_TITLES,
-                variables = mapOf(
-                    "first" to 20,
-                    "searchTitlesFilter" to mapOf("searchQuery" to query),
-                    "language" to "fr",
-                    "country" to "BE",
-                    "formatPoster" to "JPG",
-                    "formatOfferIcon" to "PNG",
-                    "profile" to "S718",
-                    "filter" to mapOf("bestOnly" to true)
-                )
-            )
+            val allResults = mutableListOf<Content>()
 
-            executeQuery(request)
+            // Search in both BE and FR for broader results
+            for (country in listOf("BE", "FR")) {
+                try {
+                    val request = GraphQLRequest(
+                        operationName = "GetSearchTitles",
+                        query = JustWatchQueries.SEARCH_TITLES,
+                        variables = mapOf(
+                            "first" to 20,
+                            "searchTitlesFilter" to mapOf("searchQuery" to query),
+                            "language" to "fr",
+                            "country" to country,
+                            "formatPoster" to "JPG",
+                            "formatOfferIcon" to "PNG",
+                            "profile" to "S718",
+                            "filter" to mapOf("bestOnly" to true)
+                        )
+                    )
+                    val result = executeQuery(request)
+                    if (result.isSuccess) {
+                        allResults.addAll(result.getOrDefault(emptyList()))
+                    }
+                } catch (_: Exception) {}
+            }
+
+            Result.success(allResults.distinctBy { it.id })
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
+    /**
+     * Supported platforms configuration: shortName -> country
+     */
+    private val supportedPlatforms = listOf(
+        Pair("rtb", "BE"),  // Auvio (RTBF)
+        Pair("rtl", "BE"),  // RTL Play
+        Pair("tf1", "FR"),  // TF1+
+        Pair("art", "FR"),  // Arte
+        Pair("prv", "BE"),  // Amazon Prime Video
+        Pair("fra", "FR"),  // France TV Amazon Channel
+        Pair("tfa", "FR")   // TFOU Max Amazon Channel
+    )
+
     suspend fun getPopularTitles(): Result<List<Content>> = withContext(Dispatchers.IO) {
         try {
-            val request = GraphQLRequest(
-                operationName = "GetPopularTitles",
-                query = JustWatchQueries.POPULAR_TITLES,
-                variables = mapOf(
-                    "first" to 60,
-                    "popularTitlesFilter" to emptyMap<String, Any>(),
-                    "language" to "fr",
-                    "country" to "BE",
-                    "formatPoster" to "JPG",
-                    "formatOfferIcon" to "PNG",
-                    "profile" to "S718",
-                    "filter" to mapOf("bestOnly" to true)
-                )
-            )
+            // Query each supported platform and merge results
+            val allContent = mutableListOf<Content>()
 
-            executeQuery(request, filterFreeOnly = false)
+            for ((shortName, country) in supportedPlatforms) {
+                try {
+                    val request = GraphQLRequest(
+                        operationName = "GetPopularTitles",
+                        query = JustWatchQueries.POPULAR_TITLES,
+                        variables = mapOf(
+                            "first" to 30,
+                            "popularTitlesFilter" to mapOf("packages" to listOf(shortName)),
+                            "language" to "fr",
+                            "country" to country,
+                            "formatPoster" to "JPG",
+                            "formatOfferIcon" to "PNG",
+                            "profile" to "S718",
+                            "filter" to mapOf("bestOnly" to true)
+                        )
+                    )
+                    val result = executeQuery(request)
+                    if (result.isSuccess) {
+                        allContent.addAll(result.getOrDefault(emptyList()))
+                    }
+                } catch (_: Exception) {
+                    // Skip failed platform, continue with others
+                }
+            }
+
+            // Deduplicate by id, sort by IMDB score
+            val deduplicated = allContent
+                .distinctBy { it.id }
+                .sortedByDescending { it.imdbScore ?: 0.0 }
+
+            Result.success(deduplicated)
         } catch (e: Exception) {
             Result.failure(e)
         }
