@@ -178,15 +178,19 @@ fun TVAggregatorNavigation(
                             }
                             var opened = false
                             if (appPackage != null) {
-                                // Strategy 1: deep link with package constraint
+                                // Strategy 1: deep link INTO app (only if app handles this URL)
                                 try {
                                     val deepIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
                                     deepIntent.setPackage(appPackage)
-                                    deepIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    context.startActivity(deepIntent)
-                                    opened = true
-                                } catch (_: Exception) {
-                                    // Strategy 2: just launch the app (home screen)
+                                    // Check if this app can actually handle this URL
+                                    if (deepIntent.resolveActivity(context.packageManager) != null) {
+                                        deepIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        context.startActivity(deepIntent)
+                                        opened = true
+                                    }
+                                } catch (_: Exception) {}
+                                // Strategy 2: just open the app (main screen)
+                                if (!opened) {
                                     try {
                                         val launchIntent = context.packageManager.getLaunchIntentForPackage(appPackage)
                                         if (launchIntent != null) {
@@ -197,7 +201,7 @@ fun TVAggregatorNavigation(
                                     } catch (_: Exception) {}
                                 }
                             }
-                            // Strategy 3: open URL in browser
+                            // Strategy 3: open URL in browser (app not installed)
                             if (!opened) {
                                 try {
                                     val webIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
