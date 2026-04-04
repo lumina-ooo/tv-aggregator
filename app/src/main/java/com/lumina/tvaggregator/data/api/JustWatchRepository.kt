@@ -86,7 +86,7 @@ class JustWatchRepository {
                         operationName = "GetPopularTitles",
                         query = JustWatchQueries.POPULAR_TITLES,
                         variables = mapOf(
-                            "first" to 30,
+                            "first" to 60,
                             "popularTitlesFilter" to mapOf("packages" to listOf(shortName)),
                             "language" to "fr",
                             "country" to country,
@@ -122,7 +122,7 @@ class JustWatchRepository {
                 operationName = "GetPopularTitles",
                 query = JustWatchQueries.POPULAR_TITLES,
                 variables = mapOf(
-                    "first" to 40,
+                    "first" to 80,
                     "popularTitlesFilter" to mapOf("packages" to listOf(platformShortName)),
                     "language" to "fr",
                     "country" to country,

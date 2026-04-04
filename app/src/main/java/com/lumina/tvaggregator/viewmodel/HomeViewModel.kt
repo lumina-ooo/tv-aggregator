@@ -66,14 +66,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        // Sort genres by content count and take top genres
+        // Sort genres by content count
         val sortedGenres = contentByGenreMap.entries
             .sortedByDescending { it.value.size }
-            .take(8) // Limit to 8 genres for better UI
+            .take(12)
             .map { (genre, contentList) ->
                 ContentByGenre(
                     genre = genre,
-                    content = contentList.sortedByDescending { it.imdbScore ?: 0.0 }.take(20)
+                    content = contentList.distinctBy { it.id }.sortedByDescending { it.imdbScore ?: 0.0 }
                 )
             }
 
