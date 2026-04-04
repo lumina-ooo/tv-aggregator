@@ -14,24 +14,6 @@ class PlatformRepository(private val context: Context) {
 
     private val defaultPlatforms = listOf(
         StreamingPlatform(
-            id = "tf1plus",
-            name = "TF1+",
-            description = "La plateforme gratuite de TF1 avec replays et programmes exclusifs",
-            packageName = "com.tf1.mytf1",
-            logoResourceId = R.drawable.logo_tf1plus,
-            category = PlatformCategory.NATIONAL_TV,
-            country = "France"
-        ),
-        StreamingPlatform(
-            id = "rtltviplus",
-            name = "RTL TVI+",
-            description = "RTL TVI en direct et en replay",
-            packageName = "be.rtl.rtlplay",
-            logoResourceId = R.drawable.logo_rtltviplus,
-            category = PlatformCategory.REGIONAL_TV,
-            country = "Belgique"
-        ),
-        StreamingPlatform(
             id = "auvio",
             name = "Auvio",
             description = "La plateforme numérique de la RTBF",
@@ -41,57 +23,21 @@ class PlatformRepository(private val context: Context) {
             country = "Belgique"
         ),
         StreamingPlatform(
-            id = "francetv",
-            name = "France.tv",
-            description = "Tous les programmes de France Télévisions en replay",
-            packageName = "fr.francetv.pluzz",
-            logoResourceId = R.drawable.logo_francetv,
+            id = "rtltviplus",
+            name = "RTL Play",
+            description = "RTL TVI en direct et en replay",
+            packageName = "be.rtl.rtlplay",
+            logoResourceId = R.drawable.logo_rtltviplus,
+            category = PlatformCategory.REGIONAL_TV,
+            country = "Belgique"
+        ),
+        StreamingPlatform(
+            id = "tf1plus",
+            name = "TF1+",
+            description = "La plateforme gratuite de TF1 avec replays et programmes exclusifs",
+            packageName = "com.tf1.mytf1",
+            logoResourceId = R.drawable.logo_tf1plus,
             category = PlatformCategory.NATIONAL_TV,
-            country = "France"
-        ),
-        StreamingPlatform(
-            id = "m6plus",
-            name = "M6+",
-            description = "Les programmes du Groupe M6 en replay et en direct",
-            packageName = "fr.m6.m6replay",
-            logoResourceId = R.drawable.logo_m6plus,
-            category = PlatformCategory.NATIONAL_TV,
-            country = "France"
-        ),
-        StreamingPlatform(
-            id = "arte",
-            name = "ARTE",
-            description = "Documentaires, films, séries et concerts",
-            packageName = "tv.arte.plus7",
-            logoResourceId = R.drawable.logo_arte,
-            category = PlatformCategory.CULTURAL,
-            country = "Franco-Allemande"
-        ),
-        StreamingPlatform(
-            id = "plutotv",
-            name = "Pluto TV",
-            description = "TV gratuite avec plus de 100 chaînes",
-            packageName = "tv.pluto.android",
-            logoResourceId = R.drawable.logo_plutotv,
-            category = PlatformCategory.INTERNATIONAL,
-            country = "International"
-        ),
-        StreamingPlatform(
-            id = "rakutentv",
-            name = "Rakuten TV",
-            description = "Films et séries gratuits avec publicité",
-            packageName = "tv.wuaki.apptv",
-            logoResourceId = R.drawable.logo_rakutentv,
-            category = PlatformCategory.INTERNATIONAL,
-            country = "International"
-        ),
-        StreamingPlatform(
-            id = "molotov",
-            name = "Molotov",
-            description = "Télévision française en direct et en replay",
-            packageName = "tv.molotov.app",
-            logoResourceId = R.drawable.logo_molotov,
-            category = PlatformCategory.LIVE_TV,
             country = "France"
         )
     )

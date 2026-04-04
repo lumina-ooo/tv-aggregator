@@ -50,7 +50,7 @@ class PlatformBrowseViewModel(application: Application) : AndroidViewModel(appli
             _errorMessage.value = null
 
             try {
-                val result = justWatchRepository.getContentByPlatform(platform.shortName)
+                val result = justWatchRepository.getContentByPlatform(platform.shortName, platform.country)
                 if (result.isSuccess) {
                     val content = result.getOrNull() ?: emptyList()
                     _platformContent.value = content
@@ -97,67 +97,28 @@ class PlatformBrowseViewModel(application: Application) : AndroidViewModel(appli
     private fun getSupportedPlatforms(): List<SupportedPlatform> {
         return listOf(
             SupportedPlatform(
-                id = "tf1",
-                name = "TF1+",
-                description = "Télévision française - Replay et directs",
-                shortName = "tfi",
-                packageName = "com.tf1.tf1plus"
-            ),
-            SupportedPlatform(
-                id = "rtl",
-                name = "RTL TVI+",
-                description = "Télévision belge - Contenu RTL Belgique",
-                shortName = "rtb",
-                packageName = "be.rtl.rtlplay"
-            ),
-            SupportedPlatform(
                 id = "auvio",
                 name = "Auvio (RTBF)",
-                description = "Service public belge - Documentaires et séries",
-                shortName = "auv",
+                description = "Service public belge — Documentaires, séries et films",
+                shortName = "rtb",
+                country = "BE",
                 packageName = "be.rtbf.auvio"
             ),
             SupportedPlatform(
-                id = "francetv",
-                name = "France.tv",
-                description = "Service public français - Large catalogue",
-                shortName = "ftv",
-                packageName = "fr.francetv.francetv"
+                id = "rtl",
+                name = "RTL Play",
+                description = "RTL Belgique — Séries, divertissement et replay",
+                shortName = "rtl",
+                country = "BE",
+                packageName = "be.rtl.rtlplay"
             ),
             SupportedPlatform(
-                id = "m6plus",
-                name = "M6+ / 6play",
-                description = "Groupe M6 - Divertissement français",
-                shortName = "6pl",
-                packageName = "fr.m6.m6plus"
-            ),
-            SupportedPlatform(
-                id = "arte",
-                name = "Arte",
-                description = "Franco-allemande - Culture et documentaires",
-                shortName = "art",
-                packageName = "tv.arte.plus7"
-            ),
-            SupportedPlatform(
-                id = "pluto",
-                name = "Pluto TV",
-                description = "Chaînes TV gratuites en streaming",
-                shortName = "ptv",
-                packageName = "tv.pluto.android"
-            ),
-            SupportedPlatform(
-                id = "rakuten",
-                name = "Rakuten TV",
-                description = "Films et séries gratuits avec publicités",
-                shortName = "rak",
-                packageName = "com.rakuten.tv.app"
-            ),
-            SupportedPlatform(
-                id = "molotov",
-                name = "Molotov",
-                description = "TV française en direct et replay",
-                shortName = "mol",
-                packageName = "tv.molotov.app"
+                id = "tf1",
+                name = "TF1+",
+                description = "TF1 France — Replay, séries et programmes exclusifs",
+                shortName = "tf1",
+                country = "FR",
+                packageName = "com.tf1.mytf1"
             )
         )
     }

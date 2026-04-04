@@ -74,7 +74,7 @@ class JustWatchRepository {
         }
     }
 
-    suspend fun getContentByPlatform(platformShortName: String): Result<List<Content>> = withContext(Dispatchers.IO) {
+    suspend fun getContentByPlatform(platformShortName: String, country: String = "BE"): Result<List<Content>> = withContext(Dispatchers.IO) {
         try {
             val request = GraphQLRequest(
                 operationName = "GetPopularTitles",
@@ -83,7 +83,7 @@ class JustWatchRepository {
                     "first" to 40,
                     "popularTitlesFilter" to mapOf("packages" to listOf(platformShortName)),
                     "language" to "fr",
-                    "country" to "BE",
+                    "country" to country,
                     "formatPoster" to "JPG",
                     "formatOfferIcon" to "PNG",
                     "profile" to "S718",

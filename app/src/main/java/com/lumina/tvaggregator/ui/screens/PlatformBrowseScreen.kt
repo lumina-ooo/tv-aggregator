@@ -36,6 +36,7 @@ data class SupportedPlatform(
     val name: String,
     val description: String,
     val shortName: String,
+    val country: String = "BE",
     val packageName: String?
 )
 
