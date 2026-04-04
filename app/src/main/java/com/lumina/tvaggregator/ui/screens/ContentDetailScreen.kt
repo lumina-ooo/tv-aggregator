@@ -77,12 +77,57 @@ fun ContentDetailScreen(
         }
 
         item {
-            // Main content layout
+            // Title + Year + Score (above poster)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = content.title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    content.originalReleaseYear?.let { year ->
+                        Text(
+                            text = year.toString(),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    content.imdbScore?.let { score ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "Note",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${String.format("%.1f", score)}/10",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        item {
+            // Poster + Genres side by side on TV, stacked otherwise
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(32.dp)
+                horizontalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                // Poster Image
+                // Poster Image (smaller)
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(content.getPosterImageUrl())
@@ -93,62 +138,16 @@ fun ContentDetailScreen(
                     placeholder = painterResource(android.R.drawable.ic_menu_gallery),
                     error = painterResource(android.R.drawable.ic_menu_gallery),
                     modifier = Modifier
-                        .width(300.dp)
-                        .height(450.dp)
+                        .width(200.dp)
+                        .height(300.dp)
                         .clip(RoundedCornerShape(12.dp))
                 )
 
-                // Content Information
+                // Info column next to poster
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Title and Year
-                    Column {
-                        Text(
-                            text = content.title,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-
-                        content.originalReleaseYear?.let { year ->
-                            Text(
-                                text = year.toString(),
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-
-                    // IMDB Score
-                    content.imdbScore?.let { score ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "Note",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = String.format("%.1f/10", score),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = " IMDB",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-
                     // Genres
                     if (content.genres.isNotEmpty()) {
                         Column {
