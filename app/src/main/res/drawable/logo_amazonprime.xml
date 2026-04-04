@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <path
+        android:pathData="M4,12A4,4 0,0 1,8 8L72,8A4,4 0,0 1,76 12L76,68A4,4 0,0 1,72 72L8,72A4,4 0,0 1,4 68Z"
+        android:fillColor="#00A8E1" />
+    <!-- "P" letter for Prime -->
+    <path
+        android:pathData="M20,20L38,20A12,12 0,0 1,38 44L28,44L28,60L20,60Z"
+        android:fillColor="@color/white" />
+    <path
+        android:pathData="M28,28L36,28A4,4 0,0 1,36 36L28,36Z"
+        android:fillColor="#00A8E1" />
+    <!-- Arrow/smile accent -->
+    <path
+        android:pathData="M42,50Q55,58 65,50"
+        android:strokeColor="#FF9900"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M61,46L65,50L60,52"
+        android:strokeColor="#FF9900"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

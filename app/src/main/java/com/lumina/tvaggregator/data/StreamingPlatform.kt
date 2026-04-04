@@ -4,7 +4,7 @@ data class StreamingPlatform(
     val id: String,
     val name: String,
     val description: String,
-    val packageName: String,
+    val packageName: String?,
     val logoResourceId: Int,
     val category: PlatformCategory,
     val country: String,

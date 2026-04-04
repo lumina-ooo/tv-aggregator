@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <path
+        android:pathData="M4,12A4,4 0,0 1,8 8L72,8A4,4 0,0 1,76 12L76,68A4,4 0,0 1,72 72L8,72A4,4 0,0 1,4 68Z"
+        android:fillColor="#003189" />
+    <!-- F letter -->
+    <path
+        android:pathData="M16,20L48,20L48,28L24,28L24,36L44,36L44,44L24,44L24,60L16,60Z"
+        android:fillColor="@color/white" />
+    <!-- TV channel indicator -->
+    <path
+        android:pathData="M54,30L70,30L70,60L54,60Z"
+        android:fillColor="#E30613" />
+    <path
+        android:pathData="M57,35L60,42L63,35L67,35L63,45L60,51L57,45L53,35Z"
+        android:fillColor="@color/white" />
+</vector>

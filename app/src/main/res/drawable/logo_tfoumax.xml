@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Colorful background for kids content -->
+    <path
+        android:pathData="M4,12A4,4 0,0 1,8 8L72,8A4,4 0,0 1,76 12L76,68A4,4 0,0 1,72 72L8,72A4,4 0,0 1,4 68Z"
+        android:fillColor="#FF6B35" />
+    <!-- Star decoration -->
+    <path
+        android:pathData="M60,12L62,18L68,18L63,22L65,28L60,24L55,28L57,22L52,18L58,18Z"
+        android:fillColor="#FFD700" />
+    <!-- TF text -->
+    <path
+        android:pathData="M10,26L28,26L28,33L23,33L23,54L17,54L17,33L10,33Z"
+        android:fillColor="@color/white" />
+    <path
+        android:pathData="M31,26L55,26L55,33L47,33L47,54L39,54L39,33L31,33Z"
+        android:fillColor="@color/white" />
+    <!-- "ou" label -->
+    <path
+        android:pathData="M10,57Q18,68 28,57"
+        android:strokeColor="#FFD700"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M31,57Q39,68 49,57"
+        android:strokeColor="#FFD700"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round" />
+</vector>

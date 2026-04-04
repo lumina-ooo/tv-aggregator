@@ -118,7 +118,39 @@ class PlatformBrowseViewModel(application: Application) : AndroidViewModel(appli
                 description = "TF1 France — Replay, séries et programmes exclusifs",
                 shortName = "tf1",
                 country = "FR",
-                packageName = "com.tf1.mytf1"
+                packageName = "fr.tf1.mytf1"
+            ),
+            SupportedPlatform(
+                id = "arte",
+                name = "Arte",
+                description = "La chaîne culturelle franco-allemande — Documentaires, films d'auteur et arts",
+                shortName = "art",
+                country = "FR",
+                packageName = "tv.arte.plus7"
+            ),
+            SupportedPlatform(
+                id = "amazonprime",
+                name = "Amazon Prime Video",
+                description = "Films, séries et productions Amazon Originals",
+                shortName = "prv",
+                country = "BE",
+                packageName = "com.amazon.amazonvideo.livingroom"
+            ),
+            SupportedPlatform(
+                id = "francetvchannel",
+                name = "France TV (Amazon Channel)",
+                description = "Chaînes France Télévisions accessibles via Amazon Prime",
+                shortName = "fra",
+                country = "FR",
+                packageName = null
+            ),
+            SupportedPlatform(
+                id = "tfoumax",
+                name = "TFOU Max (Amazon Channel)",
+                description = "Contenu jeunesse et enfants — Dessins animés et programmes familiaux (via Amazon Prime)",
+                shortName = "tfa",
+                country = "FR",
+                packageName = null
             )
         )
     }

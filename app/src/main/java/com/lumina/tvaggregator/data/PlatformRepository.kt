@@ -35,8 +35,44 @@ class PlatformRepository(private val context: Context) {
             id = "tf1plus",
             name = "TF1+",
             description = "La plateforme gratuite de TF1 avec replays et programmes exclusifs",
-            packageName = "com.tf1.mytf1",
+            packageName = "fr.tf1.mytf1",
             logoResourceId = R.drawable.logo_tf1plus,
+            category = PlatformCategory.NATIONAL_TV,
+            country = "France"
+        ),
+        StreamingPlatform(
+            id = "arte",
+            name = "Arte",
+            description = "La chaîne culturelle franco-allemande — Documentaires, films d'auteur et arts",
+            packageName = "tv.arte.plus7",
+            logoResourceId = R.drawable.logo_arte,
+            category = PlatformCategory.CULTURAL,
+            country = "France"
+        ),
+        StreamingPlatform(
+            id = "amazonprime",
+            name = "Amazon Prime Video",
+            description = "Films, séries et productions Amazon Originals",
+            packageName = "com.amazon.amazonvideo.livingroom",
+            logoResourceId = R.drawable.logo_amazonprime,
+            category = PlatformCategory.INTERNATIONAL,
+            country = "Belgique"
+        ),
+        StreamingPlatform(
+            id = "francetvchannel",
+            name = "France TV (Amazon Channel)",
+            description = "Chaînes France Télévisions accessibles via Amazon Prime",
+            packageName = null,
+            logoResourceId = R.drawable.logo_francetvch,
+            category = PlatformCategory.NATIONAL_TV,
+            country = "France"
+        ),
+        StreamingPlatform(
+            id = "tfoumax",
+            name = "TFOU Max (Amazon Channel)",
+            description = "Contenu jeunesse et enfants — Dessins animés et programmes familiaux (via Amazon Prime)",
+            packageName = null,
+            logoResourceId = R.drawable.logo_tfoumax,
             category = PlatformCategory.NATIONAL_TV,
             country = "France"
         )
@@ -49,12 +85,13 @@ class PlatformRepository(private val context: Context) {
     private fun updatePlatformsWithInstallationStatus() {
         val packageManager = context.packageManager
         val updatedPlatforms = defaultPlatforms.map { platform ->
-            platform.copy(isInstalled = isPackageInstalled(packageManager, platform.packageName))
+            platform.copy(isInstalled = platform.packageName?.let { isPackageInstalled(packageManager, it) } ?: false)
         }
         _platforms.value = updatedPlatforms
     }
 
-    private fun isPackageInstalled(packageManager: PackageManager, packageName: String): Boolean {
+    private fun isPackageInstalled(packageManager: PackageManager, packageName: String?): Boolean {
+        if (packageName == null) return false
         return try {
             packageManager.getPackageInfo(packageName, 0)
             true

@@ -97,6 +97,29 @@ class JustWatchRepository {
         }
     }
 
+    suspend fun getKidsContent(country: String = "BE"): Result<List<Content>> = withContext(Dispatchers.IO) {
+        try {
+            val request = GraphQLRequest(
+                operationName = "GetPopularTitles",
+                query = JustWatchQueries.POPULAR_TITLES,
+                variables = mapOf(
+                    "first" to 60,
+                    "popularTitlesFilter" to mapOf("genres" to listOf("ani", "fml")),
+                    "language" to "fr",
+                    "country" to country,
+                    "formatPoster" to "JPG",
+                    "formatOfferIcon" to "PNG",
+                    "profile" to "S718",
+                    "filter" to mapOf("bestOnly" to true)
+                )
+            )
+
+            executeQuery(request)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private suspend fun executeQuery(request: GraphQLRequest, filterFreeOnly: Boolean = false): Result<List<Content>> {
         val response = api.query(request)
 
