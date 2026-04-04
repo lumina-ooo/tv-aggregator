@@ -1,5 +1,6 @@
 package com.lumina.tvaggregator.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -288,7 +289,9 @@ private fun OfferCard(
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier.width(280.dp)
+        modifier = modifier
+            .width(280.dp)
+            .then(Modifier.clickable { onClick() })
     ) {
         Row(
             modifier = Modifier
