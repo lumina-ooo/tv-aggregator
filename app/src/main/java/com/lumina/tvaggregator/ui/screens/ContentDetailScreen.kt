@@ -201,30 +201,57 @@ fun ContentDetailScreen(
         }
 
         item {
-            // Available Platforms
-            if (content.getFreeOffers().isNotEmpty()) {
+            // Available Platforms — show ALL offers
+            if (content.offers.isNotEmpty()) {
                 Column {
-                    Text(
-                        text = "Disponible gratuitement sur :",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
+                    // Free offers first
+                    if (content.getFreeOffers().isNotEmpty()) {
+                        Text(
+                            text = "Disponible gratuitement :",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
 
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(content.getFreeOffers()) { offer ->
-                            OfferCard(
-                                offer = offer,
-                                onClick = { onOfferClick(offer) }
-                            )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(content.getFreeOffers()) { offer ->
+                                OfferCard(
+                                    offer = offer,
+                                    onClick = { onOfferClick(offer) }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    // All other offers (FLATRATE, RENT, BUY)
+                    val paidOffers = content.offers.filter { !it.isFree() }
+                    if (paidOffers.isNotEmpty()) {
+                        Text(
+                            text = if (content.getFreeOffers().isNotEmpty()) "Aussi disponible sur :" else "Disponible sur :",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(paidOffers) { offer ->
+                                OfferCard(
+                                    offer = offer,
+                                    onClick = { onOfferClick(offer) }
+                                )
+                            }
                         }
                     }
                 }
             } else {
-                // No free offers available
                 Card(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -235,13 +262,13 @@ fun ContentDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Aucune offre gratuite disponible",
+                            text = "Aucune offre disponible",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Ce contenu n'est actuellement pas disponible gratuitement sur les plateformes supportées",
+                            text = "Ce contenu n'est pas disponible actuellement sur les plateformes supportées",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center

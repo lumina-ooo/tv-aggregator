@@ -87,9 +87,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun openContent(content: Content, context: Context) {
         viewModelScope.launch {
             try {
-                val freeOffer = content.getFreeOffers().firstOrNull()
-                if (freeOffer?.webUrl != null) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(freeOffer.webUrl))
+                // Try free offers first, then any offer with a URL
+                val offer = content.getFreeOffers().firstOrNull()
+                    ?: content.offers.firstOrNull { it.webUrl != null }
+                if (offer?.webUrl != null) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(offer.webUrl))
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 } else {

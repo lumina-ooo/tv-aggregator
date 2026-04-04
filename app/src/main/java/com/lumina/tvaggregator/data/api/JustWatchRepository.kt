@@ -68,7 +68,7 @@ class JustWatchRepository {
                 )
             )
 
-            executeQuery(request, filterFreeOnly = true)
+            executeQuery(request, filterFreeOnly = false)
         } catch (e: Exception) {
             Result.failure(e)
         }

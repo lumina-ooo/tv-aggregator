@@ -70,6 +70,15 @@ fun TVAggregatorNavigation(
                 },
                 onRefresh = {
                     homeViewModel.refreshContent()
+                },
+                onKidsClick = {
+                    navController.navigate(Screen.Kids.route)
+                },
+                onPlatformsClick = {
+                    navController.navigate(Screen.PlatformBrowse.route)
+                },
+                onSearchClick = {
+                    navController.navigate(Screen.Search.route)
                 }
             )
 
@@ -145,7 +154,14 @@ fun TVAggregatorNavigation(
                         navController.popBackStack()
                     },
                     onOfferClick = { offer ->
-                        homeViewModel.openContent(selectedContent, context)
+                        if (offer.webUrl != null) {
+                            val intent = android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse(offer.webUrl)
+                            )
+                            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                            try { context.startActivity(intent) } catch (_: Exception) {}
+                        }
                     }
                 )
             } else {

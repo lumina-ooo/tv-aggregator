@@ -7,6 +7,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Tv
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +40,9 @@ fun HomeScreen(
     isLoading: Boolean,
     onContentClick: (Content) -> Unit,
     onRefresh: () -> Unit,
+    onKidsClick: (() -> Unit)? = null,
+    onPlatformsClick: (() -> Unit)? = null,
+    onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -64,20 +70,46 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Contenu gratuit francophone",
+                    text = "Streaming francophone — Belgique & France",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            IconButton(
-                onClick = onRefresh,
-                modifier = Modifier.focusRequester(focusRequester)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    Icons.Default.Refresh,
-                    contentDescription = "Actualiser"
-                )
+                onSearchClick?.let { onClick ->
+                    Button(
+                        onClick = onClick,
+                        modifier = Modifier.focusRequester(focusRequester)
+                    ) {
+                        Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Recherche")
+                    }
+                }
+                onPlatformsClick?.let { onClick ->
+                    Button(onClick = onClick) {
+                        Icon(Icons.Default.Tv, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Plateformes")
+                    }
+                }
+                onKidsClick?.let { onClick ->
+                    Button(
+                        onClick = onClick,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35)
+                        )
+                    ) {
+                        Text("🧸 Enfants")
+                    }
+                }
+                IconButton(onClick = onRefresh) {
+                    Icon(Icons.Default.Refresh, contentDescription = "Actualiser")
+                }
             }
         }
 
